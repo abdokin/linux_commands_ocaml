@@ -1,2 +1,2 @@
 let () = 
-  failwith "unimplemented"
+  Sys.getcwd() |> print_endline
