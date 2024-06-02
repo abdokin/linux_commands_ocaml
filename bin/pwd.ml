@@ -1,15 +1,23 @@
-let () = 
-  Sys.getcwd() |> print_endline
+let usage = "pwd: pwd [-LP]"
+     
+let print_pwd = ref false 
+let print_physical = ref false
 
-(* TODO Implement command line argument*)
-(*
--L, --logical
-       use PWD from environment, even if it contains symlinks
--P, --physical
-       avoid all symlinks
---help display this help and exit
---version
-       output version information and exit
-If no option is specified, -P is assumed.
-NOTE: your shell may have its own version of pwd, which usually supersedes the version described here.
-Please refer to your shell's documentation for details about the options it supports. *)
+let speclist = [
+("-L", Arg.Set print_pwd, "print the value of $PWD if it names the current working directory");
+("-P", Arg.Set print_physical , "avoid all symlinks");
+]
+
+let () = 
+Arg.parse speclist (fun _ -> ()) usage;
+let current_directory = 
+       if !print_physical then
+       Unix.getcwd ()
+       else if !print_pwd then
+       match Sys.getenv_opt "PWD" with
+       | Some pwd -> pwd
+       | None -> Unix.getcwd ()
+       else
+       Unix.getcwd ()
+in
+print_endline current_directory
