@@ -1,4 +1,5 @@
-(executable
- (public_name ls)
- (name ls)
- (libraries ))
+(executables
+ (public_names ls pwd)
+ (names ls pwd)
+ (modes byte)
+ (libraries unix))
